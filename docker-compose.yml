@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  api:
+    build: api
+    image: api_demo
+    restart: always
+    command: python src_api/demo.py
+    volumes:
+      - ./api/src_api:/api/src_api
+      - ./api/tests:/api/tests
+    ports:
+      - 5000:5000
+  
+  api_tests:
+    image: api_demo
+    command: pytest -v --setup-show --junitxml=/api/test_results/results.xml
+    volumes:
+      - ./api/test_results:/api/test_results
+    depends_on: 
+      - "api"
+    profiles:
+      - test
